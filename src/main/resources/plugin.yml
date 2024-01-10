@@ -1,4 +1,10 @@
-name: ExampleProject
+name: WorldLock
 version: '${version}'
-main: host.plas.exampleproject.ExampleProject
-api-version: '1.20'
+main: host.plas.worldlock.WorldLock
+
+commands:
+  manageworlds:
+    description: Manage worlds
+    aliases:
+      - mw
+    permission: worldlock.command.manageworlds
