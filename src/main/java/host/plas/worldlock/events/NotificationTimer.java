@@ -1,19 +1,17 @@
 package host.plas.worldlock.events;
 
-import io.streamlined.bukkit.instances.BaseRunnable;
+import host.plas.bou.scheduling.BaseRunnable;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentSkipListSet;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Getter @Setter
-public class NotificationTimer extends BaseRunnable {
+public class NotificationTimer extends BaseRunnable implements Comparable<NotificationTimer> {
     @Getter @Setter
     private static ConcurrentSkipListSet<NotificationTimer> notifications = new ConcurrentSkipListSet<>();
 
@@ -52,16 +50,21 @@ public class NotificationTimer extends BaseRunnable {
     private Player player;
 
     private NotificationTimer(String identifier, Player player) {
-        super(5 * 20, 1, true); // 5 second delayed then cancels. Asynchronous.
+        super(5 * 20, 1); // 5 second delayed then cancels. Asynchronous.
 
         this.identifier = identifier;
         this.player = player;
     }
 
     @Override
-    public void execute() {
+    public void run() {
         removeNotification(identifier, player);
 
         cancel();
+    }
+
+    @Override
+    public int compareTo(@NotNull NotificationTimer o) {
+        return getIdentifier().compareTo(o.getIdentifier());
     }
 }

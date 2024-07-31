@@ -1,6 +1,10 @@
 name: WorldLock
 version: '${version}'
 main: host.plas.worldlock.WorldLock
+folia-supported: true
+authors: [ Drak ]
+depend:
+  - BukkitOfUtils
 
 commands:
   manageworlds:

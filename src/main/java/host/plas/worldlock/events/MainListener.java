@@ -1,7 +1,7 @@
 package host.plas.worldlock.events;
 
+import host.plas.bou.commands.Sender;
 import host.plas.worldlock.WorldLock;
-import host.plas.worldlock.utils.MessageUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -12,6 +12,10 @@ import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class MainListener implements Listener {
+    public MainListener() {
+        WorldLock.getInstance().logInfo("MainListener has been registered!");
+    }
+
     @EventHandler
     public void onWorldEnter(PlayerMoveEvent event) {
         onOtherWorld(event);
@@ -46,9 +50,10 @@ public class MainListener implements Listener {
 
                 event.setCancelled(true);
                 if (! NotificationTimer.hasNotification(toWorld.getName(), player)) {
-                    event.getPlayer().sendMessage(MessageUtils.colorize("&cThis world is locked!"));
+                    Sender sender = new Sender(player);
+                    sender.sendMessage("&cThis world is locked!");
                     NotificationTimer.addNotification(toWorld.getName(), player).ifPresentOrElse(p -> {}, () -> {
-                        MessageUtils.logDebug("Failed to add notification timer for player " + player.getName() + " in world " + toWorld.getName() + "!");
+                        WorldLock.getInstance().logDebug("Failed to add notification timer for player " + player.getName() + " in world " + toWorld.getName() + "!");
                     });
                 }
             }

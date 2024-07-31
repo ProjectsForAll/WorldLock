@@ -10,6 +10,9 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 @Getter @Setter
 public class MyConfig extends SimpleConfiguration {
+    @Getter @Setter
+    private static ConcurrentSkipListSet<String> loadedLockedWorlds;
+
     public MyConfig() {
         super("config.yml", WorldLock.getInstance(), false);
     }
@@ -17,7 +20,19 @@ public class MyConfig extends SimpleConfiguration {
     @Override
     public void init() {
         // Set defaults
-        getLockedWorlds();
+        loadLockedWorlds();
+    }
+
+    public void loadLockedWorlds() {
+        loadedLockedWorlds = getLockedWorlds();
+    }
+
+    public void reloadFromConfig() {
+        loadLockedWorlds();
+    }
+
+    public void saveToConfig() {
+        setLockedWorlds(getLoadedLockedWorlds());
     }
 
     /**
@@ -31,26 +46,25 @@ public class MyConfig extends SimpleConfiguration {
     }
 
     public void addLockedWorld(String world) {
-        ConcurrentSkipListSet<String> lockedWorlds = getLockedWorlds();
-        lockedWorlds.add(world);
-        write("locked-worlds", new ArrayList<>(lockedWorlds));
+        loadedLockedWorlds.add(world);
+        saveToConfig();
     }
 
     public void removeLockedWorld(String world) {
-        ConcurrentSkipListSet<String> lockedWorlds = getLockedWorlds();
-        lockedWorlds.remove(world);
-        write("locked-worlds", new ArrayList<>(lockedWorlds));
+        loadedLockedWorlds.remove(world);
+        saveToConfig();
     }
 
     public boolean isLockedWorld(String world) {
-        return getLockedWorlds().contains(world);
+        return getLoadedLockedWorlds().contains(world);
+    }
+
+    public void clearLockedWorlds() {
+        loadedLockedWorlds.clear();
+        saveToConfig();
     }
 
     public void setLockedWorlds(ConcurrentSkipListSet<String> lockedWorlds) {
         write("locked-worlds", new ArrayList<>(lockedWorlds));
-    }
-
-    public void clearLockedWorlds() {
-        write("locked-worlds", new ArrayList<>());
     }
 }

@@ -1,10 +1,10 @@
 package host.plas.worldlock.commands;
 
 import host.plas.worldlock.WorldLock;
-import io.streamlined.bukkit.commands.CommandContext;
-import io.streamlined.bukkit.commands.SimplifiedCommand;
+import host.plas.bou.commands.CommandContext;
+import host.plas.bou.commands.SimplifiedCommand;
+import host.plas.worldlock.configs.MyConfig;
 import org.bukkit.Bukkit;
-import tv.quaint.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +75,7 @@ public class WorldsCMD extends SimplifiedCommand {
                 });
                 return true;
             case "list":
-                List<String> lockedWorlds = new ArrayList<>(WorldLock.getMyConfig().getLockedWorlds());
+                List<String> lockedWorlds = new ArrayList<>(MyConfig.getLoadedLockedWorlds());
                 if (lockedWorlds.isEmpty()) {
                     commandContext.sendMessage("&cThere are no locked worlds.");
                     return true;
@@ -101,7 +101,7 @@ public class WorldsCMD extends SimplifiedCommand {
         } else if (commandContext.getArgs().size() == 2 && (commandContext.getStringArg(0).equals("add"))) {
             tab.addAll(Bukkit.getServer().getWorlds().stream().map(world -> world.getName().toLowerCase()).collect(Collectors.toList()));
         } else if (commandContext.getArgs().size() == 2 && (commandContext.getStringArg(0).equals("remove"))) {
-            tab.addAll(WorldLock.getMyConfig().getLockedWorlds().stream().map(String::toLowerCase).collect(Collectors.toList()));
+            tab.addAll(MyConfig.getLoadedLockedWorlds().stream().map(String::toLowerCase).collect(Collectors.toList()));
         }
 
         return tab;
