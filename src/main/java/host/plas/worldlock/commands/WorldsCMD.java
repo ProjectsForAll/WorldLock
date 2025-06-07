@@ -5,6 +5,7 @@ import host.plas.bou.commands.CommandContext;
 import host.plas.bou.commands.SimplifiedCommand;
 import host.plas.worldlock.configs.MyConfig;
 import org.bukkit.Bukkit;
+import org.bukkit.generator.WorldInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,9 +100,9 @@ public class WorldsCMD extends SimplifiedCommand {
             tab.add("remove");
             tab.add("list");
         } else if (commandContext.getArgs().size() == 2 && (commandContext.getStringArg(0).equals("add"))) {
-            tab.addAll(Bukkit.getServer().getWorlds().stream().map(world -> world.getName().toLowerCase()).collect(Collectors.toList()));
+            tab.addAll(Bukkit.getWorlds().stream().map(WorldInfo::getName).collect(Collectors.toList()));
         } else if (commandContext.getArgs().size() == 2 && (commandContext.getStringArg(0).equals("remove"))) {
-            tab.addAll(MyConfig.getLoadedLockedWorlds().stream().map(String::toLowerCase).collect(Collectors.toList()));
+            tab.addAll(MyConfig.getLoadedLockedWorlds());
         }
 
         return tab;
